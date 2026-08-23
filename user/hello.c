@@ -1,0 +1,10 @@
+#include "kernel/types.h"
+#include "kernel/stat.h"
+#include "kernel/fcntl.h"
+#include "user/user.h"
+
+int main(){
+
+    printf("Hello, World!\n");
+    exit(1);
+}

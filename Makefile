@@ -146,9 +146,17 @@ UPROGS=\
 	$U/_forphan\
 	$U/_dorphan\
 	$U/_sync\
+	$U/_hello\
+	$U/_clear\
+	$U/_head\
+	$U/_tail\
+	$U/_cmd\
+	$U/_cp\
+	$U/_mgrep\
 
-fs.img: mkfs/mkfs README $(UPROGS)
-	mkfs/mkfs fs.img README $(UPROGS)
+
+fs.img: mkfs/mkfs README dummy.txt source.txt dest.txt $(UPROGS)
+	mkfs/mkfs fs.img README dummy.txt source.txt dest.txt $(UPROGS)
 
 -include kernel/*.d user/*.d
 
