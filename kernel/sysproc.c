@@ -17,6 +17,13 @@ sys_exit(void)
 }
 
 uint64
+sys_sqNumber(void){
+  int n;
+  argint(0, &n);
+  return n*n;
+}
+
+uint64
 sys_getpid(void)
 {
   return myproc()->pid;
