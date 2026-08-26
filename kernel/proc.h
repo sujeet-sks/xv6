@@ -101,4 +101,5 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  int childCount; // to count number of (immidiate) children of the process.
 };

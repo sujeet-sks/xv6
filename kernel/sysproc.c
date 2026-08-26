@@ -56,6 +56,32 @@ sys_wait(void)
 }
 
 uint64
+sys_get_child_count(void)
+{
+  return myproc()->childCount;
+}
+
+extern struct proc proc[];
+uint64
+sys_get_process_child_count(void)
+{
+  int pid;
+  int childCount = -1;
+  argint(0, &pid);
+  struct proc * p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state != UNUSED && p->pid == pid){
+      //we got our proc structure
+      acquire(&p->lock);
+      childCount = p->childCount;
+      release(&p->lock);
+      return childCount;
+    }
+  }
+  return -1;
+}
+
+uint64
 sys_sbrk(void)
 {
   uint64 addr;

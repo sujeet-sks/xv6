@@ -290,7 +290,8 @@ kfork(void)
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
-
+  //child count logic
+  np->childCount = 0;
   release(&np->lock);
 
   acquire(&wait_lock);
@@ -300,6 +301,11 @@ kfork(void)
   acquire(&np->lock);
   np->state = RUNNABLE;
   release(&np->lock);
+
+  acquire(&p->lock);
+  p->childCount++;
+  release(&p->lock);
+
 
   return pid;
 }
@@ -351,7 +357,7 @@ kexit(int status)
 
   // Parent might be sleeping in wait().
   wakeup(p->parent);
-
+  
   acquire(&p->lock);
 
   p->xstate = status;
@@ -387,6 +393,10 @@ kwait(uint64 addr)
         if (pp->state == ZOMBIE) {
           // Found one.
           pid = pp->pid;
+          //decrementing child count;
+          acquire(&p->lock);
+          p->childCount--;
+          release(&p->lock);
           if (addr != 0 &&
               copyout(p->pagetable, p->sz, addr, (char *)&pp->xstate,
                       sizeof(pp->xstate)) < 0) {

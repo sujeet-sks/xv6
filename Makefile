@@ -155,6 +155,7 @@ UPROGS=\
 	$U/_mgrep\
 	$U/_ppid\
 	$U/_sq\
+	$U/_test_children\
 
 
 fs.img: mkfs/mkfs README dummy.txt source.txt dest.txt $(UPROGS)
