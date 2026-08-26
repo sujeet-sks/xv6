@@ -153,6 +153,7 @@ UPROGS=\
 	$U/_cmd\
 	$U/_cp\
 	$U/_mgrep\
+	$U/_ppid\
 
 
 fs.img: mkfs/mkfs README dummy.txt source.txt dest.txt $(UPROGS)
