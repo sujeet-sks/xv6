@@ -71,6 +71,14 @@ sys_nfork(void)
   return n;
 }
 
+uint64
+sys_pte_valid(void){
+  uint64 va;
+  argaddr(0, &va);
+  struct proc *p = myproc();
+  return ismapped(p->pagetable,va);
+}
+
 uint64 
 sys_print_syscalls(void){
   struct proc *p = myproc();
