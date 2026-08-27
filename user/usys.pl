@@ -47,3 +47,4 @@ entry("getppid");
 entry("sqNumber");
 entry("get_child_count");
 entry("get_process_child_count");
+entry("nfork");

@@ -107,6 +107,7 @@ extern uint64 sys_getppid(void);
 extern uint64 sys_sqNumber(void);
 extern uint64 sys_get_child_count(void);
 extern uint64 sys_get_process_child_count(void);
+extern uint64 sys_nfork(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -137,7 +138,8 @@ static uint64 (*syscalls[])(void) = {
   [SYS_getppid]  sys_getppid,
   [SYS_sqNumber]  sys_sqNumber,
   [SYS_get_child_count]  sys_get_child_count,
-  [SYS_get_process_child_count]  sys_get_process_child_count 
+  [SYS_get_process_child_count]  sys_get_process_child_count,
+  [SYS_nfork] sys_nfork
   // clang-format on
 };
 

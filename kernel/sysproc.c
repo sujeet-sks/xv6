@@ -48,6 +48,28 @@ sys_fork(void)
 }
 
 uint64
+sys_nfork(void)
+{
+  int n;
+  uint64 child_pid;
+  argint(0, &n);
+  argaddr(1, &child_pid);
+
+  struct proc *p = myproc();
+  for (int i = 0; i < n; i++) {
+    int childId = kfork();
+    if (childId == 0) return 0;
+    // if it failed to create child then that child id is stored as negetive only
+    kwait(0);
+    if (copyout(p->pagetable, p->sz, child_pid, (char *)&childId, sizeof(int)) < 0) {
+      return -1; // Handle error if user pointer is invalid
+    }
+    child_pid = child_pid + sizeof(int);
+  }
+  return n;
+}
+
+uint64
 sys_wait(void)
 {
   uint64 p;
