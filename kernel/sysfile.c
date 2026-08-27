@@ -52,6 +52,32 @@ fdalloc(struct file *f)
 }
 
 uint64
+sys_get_inode_num(void)
+{
+  int fd;
+  argint(0, &fd);
+  struct proc *p = myproc();
+  struct file *filePtr = p->ofile[fd];
+  if (filePtr != 0 && filePtr->type == FD_INODE) {
+    return filePtr->ip->inum;
+  }
+  return -1;
+}
+
+uint64
+sys_get_read_offset(void)
+{
+  int fd;
+  argint(0, &fd);
+  struct proc *p = myproc();
+  struct file *filePtr = p->ofile[fd];
+  if (filePtr != 0 && filePtr->type == FD_INODE) {
+    return filePtr->off;
+  }
+  return -1;
+}
+
+uint64
 sys_dup(void)
 {
   struct file *f;
