@@ -1,33 +1,38 @@
-#include "kernel/fcntl.h"
 #include "kernel/types.h"
+#include "kernel/stat.h"
 #include "user/user.h"
+#include "kernel/fcntl.h"
 
-
-int main(){
-
-    int fd = open("dummy.txt", O_RDWR);
-    printf("[parent] fd = %d  inode = %d  offset = %d \n", fd, get_inode_num(fd), get_read_offset(fd));
-    printf("[parent] forking a child. \n");
-    int pid = fork();
-    if(pid < 0){
-        printf("unable to create child.\n");
+int main() {
+    int fd = open("test_fd.txt", O_CREATE | O_RDWR);
+    if(fd < 0) {
+        printf("open failed\n");
         exit(1);
     }
-    if(pid == 0){
-        // inside child
-        printf("[child] fd = %d  inode = %d  offset = %d \n", fd, get_inode_num(fd), get_read_offset(fd));
-        printf("reading 5 Byte from fd = %d \n", fd);
-        char *c;
-        read(fd, &c, 5);
-        printf("[child] fd = %d  inode = %d  offset = %d \n", fd, get_inode_num(fd), get_read_offset(fd));
+
+    write(fd, "hello world\n", 12);
+    close(fd);
+    
+    fd = open("test_fd.txt", O_RDONLY);
+    
+    printf("[parent] fd=%d, inode=%d, offset=%d\n", fd, (int)get_inode_num(fd), (int)get_read_offset(fd));
+    printf("[parent] forking a child...\n");
+    
+    int pid = fork();
+    if (pid == 0) {
+        printf("[child] fd=%d, inode=%d, offset=%d\n", fd, (int)get_inode_num(fd), (int)get_read_offset(fd));
+        char buf[64];
+        int n = 5;
+        printf("[child] reading %d bytes from fd=%d\n", n, fd);
+        read(fd, buf, n);
+        printf("[child] fd=%d, inode=%d, offset=%d\n", fd, (int)get_inode_num(fd), (int)get_read_offset(fd));
         exit(0);
     }
-    else{
-        //inside parent
-        wait(0);
-        printf("[parent] reaping child... \n");
-        printf("[parent] fd = %d  inode = %d  offset = %d \n", fd, get_inode_num(fd), get_read_offset(fd));
-    }
-
+    
+    wait(0);
+    printf("[parent] reaping child...\n");
+    printf("[parent] fd=%d, inode=%d, offset=%d\n", fd, (int)get_inode_num(fd), (int)get_read_offset(fd));
+    
+    close(fd);
     exit(0);
 }

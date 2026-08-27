@@ -78,6 +78,35 @@ sys_get_read_offset(void)
 }
 
 uint64
+sys_peek2(void)
+{
+  int fd, num_byte;
+  argint(0, &fd);
+  uint64 user_addr;
+  argaddr(1, &user_addr);
+  argint(2, &num_byte);
+
+  int r;
+  struct proc *p = myproc();
+  struct file *filePtr = p->ofile[fd];
+  if (filePtr != 0 && filePtr->type == FD_INODE) {
+    ilock(filePtr->ip);
+    if ((r = readi(filePtr->ip, 1, user_addr, filePtr->off, num_byte)) < 0) {
+      printk("issue in reading file!\n");
+      iunlock(filePtr->ip);
+      return -1; // file is unreadable
+    }
+    iunlock(filePtr->ip);
+    if(r < num_byte){
+      //end of file logic
+      return -2;
+    }
+    return r;
+  }
+  return -1; // invalid fd case
+}
+
+uint64
 sys_dup(void)
 {
   struct file *f;

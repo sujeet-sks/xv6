@@ -159,6 +159,7 @@ UPROGS=\
 	$U/_test_nfork\
 	$U/_test_syscalls\
 	$U/_test_fd\
+	$U/_test_peek\
 
 
 fs.img: mkfs/mkfs README dummy.txt source.txt dest.txt $(UPROGS)
