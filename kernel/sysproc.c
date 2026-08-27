@@ -7,6 +7,8 @@
 #include "proc.h"
 #include "vm.h"
 
+extern struct proc proc[];
+
 uint64
 sys_exit(void)
 {
@@ -69,6 +71,46 @@ sys_nfork(void)
   return n;
 }
 
+uint64 
+sys_print_syscalls(void){
+  struct proc *p = myproc();
+  int n = sizeof(p->sysCallCount)/(sizeof(int));
+  int *arr = p->sysCallCount;
+  printk("syscall_number     invocation\n");
+  for(int i=0; i< n; i++){
+    printk("%d        %d \n", i+1, arr[i]);
+  }
+
+  return 1;
+}
+
+uint64 
+sys_print_process_syscalls(void){
+
+  int pid;
+  argint(0, &pid);
+  struct proc *p;
+  int processFound = 0;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state != UNUSED && p->pid == pid){
+      //we got our proc structure
+      processFound = 1;
+      break;
+    }
+  }
+  if(!processFound){
+    printk("Process not found! \n");
+    return -1;
+  }
+  int n = sizeof(p->sysCallCount)/(sizeof(int));
+  int *arr = p->sysCallCount;
+  printk("syscall_number     invocation\n");
+  for(int i=0; i< n; i++){
+    printk("%d        %d \n", i+1, arr[i]);
+  }
+  return 1;
+}
+
 uint64
 sys_wait(void)
 {
@@ -83,7 +125,6 @@ sys_get_child_count(void)
   return myproc()->childCount;
 }
 
-extern struct proc proc[];
 uint64
 sys_get_process_child_count(void)
 {
