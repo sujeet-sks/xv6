@@ -2,22 +2,21 @@
 #include "kernel/stat.h"
 #include "user/user.h"
 
-int
-main(int argc, char *argv[])
-{
-  int i;
+int main() {
+    int pid = getpid();
 
-  if (argc < 2) {
-    fprintf(2, "Usage: mkdir files...\n");
-    exit(1);
-  }
+    printf("[parent] my pid is %d\n", pid);
+    printf("[parent] forking a child process\n");
 
-  for (i = 1; i < argc; i++) {
-    if (mkdir(argv[i]) < 0) {
-      fprintf(2, "mkdir: %s failed to create\n", argv[i]);
-      break;
+    int child = fork();
+
+    if (child == 0) {
+        printf("[child] my pid is %d\n", getpid());
+        printf("[child] my parent is %d\n", getppid());
+        exit(0);
+    } else {
+        wait(0);
     }
-  }
 
-  exit(0);
+    exit(0);
 }

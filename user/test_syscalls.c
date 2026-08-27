@@ -1,13 +1,20 @@
-#include "kernel/fcntl.h"
 #include "kernel/types.h"
+#include "kernel/stat.h"
 #include "user/user.h"
 
-int main(){
-
-    printf("Syscall count for current process: \n");
+int main() {
+    int pid = fork();
+    if (pid == 0) {
+        pause(5);
+        exit(0);
+    }
+    
+    pause(1);
+    
     print_syscalls();
-    printf("Syscall count for pid: %d \n", 3);
-    print_process_syscalls(3);
-
+    printf("\n");
+    print_process_syscalls(pid);
+    
+    wait(0);
     exit(0);
 }
