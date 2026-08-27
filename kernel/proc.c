@@ -253,6 +253,21 @@ growproc(int n)
   return 0;
 }
 
+void
+printAllFlags(uint64 va){
+  
+  struct proc* p = myproc();
+  pte_t *pte = walk(p->pagetable, va, 0);
+  if(pte == 0 || (*pte & PTE_V) == 0) {
+    printk("Page is not valid or mapped.\n");
+    return;
+  }
+  uint64 flags = *pte & 0x3FF; //to get last 10 bits
+  printk("VA: %p  -> R: %d  W: %d  X: %d  U: %d\n", (void *)va, (flags && PTE_R), (flags && PTE_W),
+  (flags && PTE_X), (flags && PTE_U));
+  return;
+}
+
 // Create a new process, copying the parent.
 // Sets up child kernel stack to return as if from fork() system call.
 int

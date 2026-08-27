@@ -79,6 +79,14 @@ sys_pte_valid(void){
   return ismapped(p->pagetable,va);
 }
 
+uint64
+sys_get_pteflags(void){
+  uint64 va;
+  argaddr(0, &va);
+  printAllFlags(va);
+  return 0;
+}
+
 uint64 
 sys_print_syscalls(void){
   struct proc *p = myproc();
