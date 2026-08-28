@@ -102,5 +102,5 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int childCount; // to count number of (immidiate) children of the process.
-  int sysCallCount[34];
+  int sysCallCount[35];
 };

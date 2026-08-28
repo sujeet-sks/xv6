@@ -80,6 +80,14 @@ sys_pte_valid(void){
 }
 
 uint64
+sys_va2pa(void){
+  uint64 va;
+  argaddr(0, &va);
+  struct proc *p = myproc();
+  return walkaddr(p->pagetable,va);
+}
+
+uint64
 sys_get_pteflags(void){
   uint64 va;
   argaddr(0, &va);
