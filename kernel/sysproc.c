@@ -88,6 +88,26 @@ sys_va2pa(void){
 }
 
 uint64
+sys_getvasize(void){
+  int pid;
+  argint(0, &pid);
+  struct proc * p;
+  int processFound = 0;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state != UNUSED && p->pid == pid){
+      //we got our proc structure
+      processFound = 1;
+      break;
+    }
+  }
+  if(!processFound){
+    printk("process not found! \n");
+    return -1;
+  }
+  return p->sz;
+}
+
+uint64
 sys_get_pteflags(void){
   uint64 va;
   argaddr(0, &va);
